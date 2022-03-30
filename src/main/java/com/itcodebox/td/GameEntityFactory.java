@@ -179,7 +179,7 @@ public class GameEntityFactory implements EntityFactory {
 
     @Spawns("placedButton")
     public Entity newPlacedButton(SpawnData data) {
-        Texture texture = FXGL.texture(data.get("imgName"), data.get("width"), data.get("height"));
+        Texture texture = FXGL.texture((String) data.get("imgName"), data.get("width"), data.get("height"));
         texture.setTranslateX((80 - texture.getWidth()) / 2.0);
         texture.setTranslateY((80 - texture.getHeight()) / 2.0);
 
