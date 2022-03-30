@@ -9,6 +9,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 /**
+ * [组件] 放置按钮
+ *
  * @author LeeWyatt
  */
 public class PlacedButtonComponent extends Component {

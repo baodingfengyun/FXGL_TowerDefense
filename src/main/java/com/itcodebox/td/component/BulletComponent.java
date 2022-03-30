@@ -4,13 +4,22 @@ import com.almasb.fxgl.entity.component.Component;
 import javafx.geometry.Point2D;
 
 /**
+ * [组件] 子弹
+ *
  * @author LeeWyatt
  */
 public class BulletComponent extends Component {
-
+    /**
+     * 子弹的初始位置
+     */
     private Point2D initPosition;
-
+    /**
+     * 半径
+     */
     private final int radius;
+    /**
+     * 伤害值
+     */
     private int damage;
 
     public BulletComponent(int radius, int damage) {

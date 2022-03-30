@@ -14,6 +14,8 @@ import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
 /**
+ * [组件] 激光塔
+ *
  * @author LeeWyatt
  */
 public class LaserTowerComponent extends Component {

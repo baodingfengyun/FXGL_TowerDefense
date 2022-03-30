@@ -14,12 +14,24 @@ import javafx.geometry.Point2D;
 import java.util.List;
 
 /**
+ * [组件] 箭塔
+ *
  * @author LeeWyatt
  */
 public class ArrowTowerComponent extends Component {
+    /**
+     * 发射箭的定时器
+     */
     private LocalTimer shootTimer;
+    /**
+     * 配置数据
+     */
     private TowerData towerData = Config.ARROW_TOWER_DATA;
-    private  int maxBullet = 10;
+    /**
+     * 最大子弹(箭)的数量
+     */
+    private int maxBullet = 10;
+
     @Override
     public void onAdded() {
         shootTimer = FXGL.newLocalTimer();

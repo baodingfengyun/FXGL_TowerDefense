@@ -12,6 +12,8 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 
 /**
+ * [组件] 建造指示器
+ *
  * @author LeeWyatt
  */
 public class BuildIndicatorComponent extends Component {
@@ -29,16 +31,17 @@ public class BuildIndicatorComponent extends Component {
 
         //范围
         okFill = new RadialGradient(
-                0.0,0.0,0.5,0.5,0.5,true,CycleMethod.NO_CYCLE,
-                new Stop(0.9,new Color( 1.0, 0.0, 0.0, 0.0)),
-                new Stop(1.0,new Color( 0.0, 1.0, 0.39, 0.4)));;
+                0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
+                new Stop(0.9, new Color(1.0, 0.0, 0.0, 0.0)),
+                new Stop(1.0, new Color(0.0, 1.0, 0.39, 0.4)));
+        ;
         disabledFill = new RadialGradient(
-                0.0,0.0,0.5,0.5,0.5,true,CycleMethod.NO_CYCLE,
-                new Stop(0.9,new Color( 1.0, 0.0, 0.0, 0.0)),
-                new Stop(1.0,new Color( 1.0, 0.0, 0.0, 0.38)));
-        circle = new Circle(Config.LASER_TOWER_DATA.getAttackRadius(),disabledFill);
-        circle.setTranslateX(texture.getWidth()/2.0);
-        circle.setTranslateY(texture.getHeight()/2.0);
+                0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
+                new Stop(0.9, new Color(1.0, 0.0, 0.0, 0.0)),
+                new Stop(1.0, new Color(1.0, 0.0, 0.0, 0.38)));
+        circle = new Circle(Config.LASER_TOWER_DATA.getAttackRadius(), disabledFill);
+        circle.setTranslateX(texture.getWidth() / 2.0);
+        circle.setTranslateY(texture.getHeight() / 2.0);
 
     }
 
@@ -49,13 +52,13 @@ public class BuildIndicatorComponent extends Component {
     }
 
     public void canBuild(boolean canBuild) {
-        circle.setFill(canBuild?okFill:disabledFill);
+        circle.setFill(canBuild ? okFill : disabledFill);
     }
 
-    public void resetIndicator(Image towerIcon,double radius) {
+    public void resetIndicator(Image towerIcon, double radius) {
         texture.setImage(towerIcon);
-        circle.setTranslateX(texture.getWidth()/2.0);
-        circle.setTranslateY(texture.getHeight()/2.0);
+        circle.setTranslateX(texture.getWidth() / 2.0);
+        circle.setTranslateY(texture.getHeight() / 2.0);
         circle.setRadius(radius);
     }
 

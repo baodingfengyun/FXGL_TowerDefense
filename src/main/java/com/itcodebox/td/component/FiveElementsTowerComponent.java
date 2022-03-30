@@ -14,6 +14,8 @@ import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
 /**
+ * [组件] 5 元素塔?
+ *
  * @author LeeWyatt
  */
 public class FiveElementsTowerComponent extends Component {

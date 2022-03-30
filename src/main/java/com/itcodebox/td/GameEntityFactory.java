@@ -23,6 +23,8 @@ import javafx.util.Pair;
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 
 /**
+ * 游戏内实体构建工厂(有意思的部分)
+ *
  * @author LeeWyatt
  */
 public class GameEntityFactory implements EntityFactory {

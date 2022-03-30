@@ -14,27 +14,54 @@ import javafx.util.Pair;
 import java.util.LinkedHashMap;
 
 /**
+ * [组件] 敌人
+ *
  * @author LeeWyatt
  */
 public class EnemyComponent extends Component {
-
+    /**
+     * 血条组件
+     */
     private HealthIntComponent hp;
+    /**
+     * 点位表
+     */
     private LinkedHashMap<Integer, Pair<Point2D, String>> pointInfos;
+    /**
+     * 下一个位置
+     */
     private Point2D nextWaypoint;
+    /**
+     * 移动速度
+     */
     private double speed;
     int index = 0;
+    /**
+     * 进度条
+     */
     private ProgressBar hpBar;
     private AnimatedTexture texture;
+    /**
+     * 4 个方向和死亡动画
+     */
     private AnimationChannel animWalkRight, animWalkLeft, animWalkUp, animWalkDown, animDie;
+    /**
+     * 死亡标记
+     */
     private boolean dead;
 
     public EnemyComponent(ProgressBar hpBar) {
         this.hpBar = hpBar;
-        animWalkRight = new AnimationChannel(FXGL.image("enemy/enemy_move_right.png", 5 * 48, 48 * 3), 5, 48, 48, Duration.seconds(.5), 0, 14);
-        animWalkLeft = new AnimationChannel(FXGL.image("enemy/enemy_move_left.png", 5 * 48, 48 * 3), 5, 48, 48, Duration.seconds(.5), 0, 14);
-        animWalkUp = new AnimationChannel(FXGL.image("enemy/enemy_move_up.png", 5 * 48, 48 * 3), 5, 48, 48, Duration.seconds(.5), 0, 14);
-        animWalkDown = new AnimationChannel(FXGL.image("enemy/enemy_move_down.png", 5 * 48, 48 * 3), 5, 48, 48, Duration.seconds(.5), 0, 14);
-        animDie = new AnimationChannel(FXGL.image("enemy/enemy_die.png", 5 * 48, 2*48 ), 5, 48, 48, Duration.seconds(.25), 0, 8);
+        animWalkRight = new AnimationChannel(FXGL.image("enemy/enemy_move_right.png", 5 * 48, 48 * 3),
+                5, 48, 48, Duration.seconds(.5), 0, 14);
+        animWalkLeft = new AnimationChannel(FXGL.image("enemy/enemy_move_left.png", 5 * 48, 48 * 3),
+                5, 48, 48, Duration.seconds(.5), 0, 14);
+        animWalkUp = new AnimationChannel(FXGL.image("enemy/enemy_move_up.png", 5 * 48, 48 * 3),
+                5, 48, 48, Duration.seconds(.5), 0, 14);
+        animWalkDown = new AnimationChannel(FXGL.image("enemy/enemy_move_down.png", 5 * 48, 48 * 3),
+                5, 48, 48, Duration.seconds(.5), 0, 14);
+        animDie = new AnimationChannel(FXGL.image("enemy/enemy_die.png", 5 * 48, 2 * 48),
+                5, 48, 48, Duration.seconds(.25), 0, 8);
 
         texture = new AnimatedTexture(animWalkRight);
 
@@ -54,7 +81,7 @@ public class EnemyComponent extends Component {
             dead = true;
             entity.getViewComponent().removeChild(hpBar);
             texture.loopAnimationChannel(animDie);
-            texture.setOnCycleFinished(()->entity.removeFromWorld());
+            texture.setOnCycleFinished(() -> entity.removeFromWorld());
         }
 
     }
@@ -88,9 +115,7 @@ public class EnemyComponent extends Component {
         }
         speed = tpf * 30 * 2;
 
-        Point2D velocity = nextWaypoint.subtract(entity.getPosition())
-                .normalize()
-                .multiply(speed);
+        Point2D velocity = nextWaypoint.subtract(entity.getPosition()).normalize().multiply(speed);
 
         entity.translate(velocity);
 
