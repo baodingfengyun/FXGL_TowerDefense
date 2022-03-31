@@ -14,7 +14,7 @@ public class BulletComponent extends Component {
      */
     private Point2D initPosition;
     /**
-     * 半径
+     * 攻击最大半径(超出范围后移除)
      */
     private final int radius;
     /**
@@ -29,12 +29,14 @@ public class BulletComponent extends Component {
 
     @Override
     public void onAdded() {
+        // 子弹的初始值,就是所属的实体的位置
         initPosition = entity.getPosition();
     }
 
     @Override
     public void onUpdate(double tpf) {
         Point2D position = entity.getPosition();
+        // 超出范围后移除
         if (position.distance(initPosition) > radius) {
             if (entity.isActive()) {
                 entity.removeFromWorld();

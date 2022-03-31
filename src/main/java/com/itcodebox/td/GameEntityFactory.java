@@ -36,10 +36,10 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns(ET_LASER_TOWER)
     public Entity newTower(SpawnData data) {
         return FXGL.entityBuilder(data)
-                .type(GameType.TOWER)
-                .bbox(BoundingShape.box(30, 30))
-                .with(new LaserTowerComponent())
-                .collidable()
+                .type(GameType.TOWER) //类型
+                .bbox(BoundingShape.box(30, 30)) //碰撞检测矩形
+                .with(new LaserTowerComponent()) //+激光塔组件
+                .collidable() //+内置碰撞组件
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class GameEntityFactory implements EntityFactory {
      */
     @Spawns(ET_THUNDER_TOWER)
     public Entity newThunderTower(SpawnData data) {
-        return buildFiveElementsTower(data, Config.THUNDER_TOWER_DATA);
+        return buildFiveElementsTower(data, THUNDER_TOWER_DATA);
     }
 
     /**
@@ -56,15 +56,15 @@ public class GameEntityFactory implements EntityFactory {
      */
     @Spawns(ET_FLAME_TOWER)
     public Entity newFlameTower(SpawnData data) {
-        return buildFiveElementsTower(data, Config.FLAME_TOWER_DATA);
+        return buildFiveElementsTower(data, FLAME_TOWER_DATA);
     }
 
     private Entity buildFiveElementsTower(SpawnData data, TowerData towerData) {
         return FXGL.entityBuilder(data)
-                .type(GameType.TOWER)
-                .bbox(BoundingShape.box(towerData.getWidth(), towerData.getHeight()))
-                .with(new FiveElementsTowerComponent(towerData))
-                .collidable()
+                .type(GameType.TOWER) //类型
+                .bbox(BoundingShape.box(towerData.getWidth(), towerData.getHeight())) //碰撞检测矩形
+                .with(new FiveElementsTowerComponent(towerData)) //+五元素塔组件
+                .collidable() //+内置碰撞组件
                 .build();
     }
 
@@ -74,9 +74,9 @@ public class GameEntityFactory implements EntityFactory {
     @Spawns(ET_ARROW_TOWER)
     public Entity newArrowTower(SpawnData data) {
         return entityBuilder(data)
-                .type(GameType.TOWER)
-                .viewWithBBox(FXGL.texture("tower/arrow/tower.png"))
-                .with(new ArrowTowerComponent())
+                .type(GameType.TOWER) //类型
+                .viewWithBBox(FXGL.texture("tower/arrow/tower.png")) //渲染图及同等大小的碰撞检测矩形
+                .with(new ArrowTowerComponent()) //+箭塔组件
                 .build();
     }
 
@@ -90,7 +90,7 @@ public class GameEntityFactory implements EntityFactory {
         TowerDefenseApp app = (TowerDefenseApp) (FXGL.getApp());
         app.getPointInfos().put(index, new Pair<>(new Point2D(data.getX(), data.getY()), dir));
         return FXGL.entityBuilder(data)
-                .type(GameType.POINT)
+                .type(GameType.POINT) //类型
                 .build();
     }
 
@@ -111,11 +111,17 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
+    /**
+     * 如何创建敌人实体
+     *
+     * @param data 参数
+     * @return
+     */
     @Spawns(ET_ENEMY)
     public Entity newEnemy(SpawnData data) {
         int maxHp = 500;
-        HealthIntComponent hp = new HealthIntComponent(maxHp);
-        ProgressBar hpBar = new ProgressBar(false);
+        HealthIntComponent hp = new HealthIntComponent(maxHp); //血值组件
+        ProgressBar hpBar = new ProgressBar(false); //进度条(显示)
         hpBar.setFill(Color.LIGHTGREEN);
         hpBar.setWidth(48);
         hpBar.setHeight(7);
@@ -135,12 +141,12 @@ public class GameEntityFactory implements EntityFactory {
 
         });
         return FXGL.entityBuilder(data)
-                .type(GameType.ENEMY)
-                .with(hp)
-                .view(hpBar)
-                .with(new EnemyComponent(hpBar))
-                .with(new CollidableComponent(true))
-                .bbox(BoundingShape.box(48, 48))
+                .type(GameType.ENEMY) //类型
+                .view(hpBar) // 外显
+                .with(hp) //+血值组件
+                .with(new EnemyComponent(hpBar)) //+敌人组件
+                .with(new CollidableComponent(true)) //+内置碰撞组件
+                .bbox(BoundingShape.box(48, 48)) //碰撞检测矩形
                 .build();
     }
 
@@ -165,13 +171,20 @@ public class GameEntityFactory implements EntityFactory {
         return createBullet(data, "tower/arrow/bullet.png", 50, 10);
     }
 
+    /**
+     * @param data 位置及自定义属性
+     * @param s    图片
+     * @param w    碰撞矩形宽
+     * @param h    碰撞矩形高
+     * @return 子弹实体
+     */
     private Entity createBullet(SpawnData data, String s, int w, int h) {
         return entityBuilder(data)
-                .type(GameType.BULLET)
-                .viewWithBBox(FXGL.texture(s, w, h))
-                .with(new CollidableComponent(true))
-                .with(new OffscreenCleanComponent())
-                .with(new BulletComponent(data.get("radius"), data.get("damage")))
+                .type(GameType.BULLET) //类型
+                .viewWithBBox(FXGL.texture(s, w, h)) //外显及碰撞矩形
+                .with(new CollidableComponent(true)) //+内置碰撞组件
+                .with(new OffscreenCleanComponent()) //+内置离开屏幕后清理实体组件
+                .with(new BulletComponent(data.get("radius"), data.get("damage"))) //+子弹组件
                 .build();
     }
 
