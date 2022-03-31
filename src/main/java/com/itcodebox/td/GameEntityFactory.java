@@ -21,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.itcodebox.td.constant.Config.*;
 
 /**
  * 游戏内实体构建工厂(有意思的部分)
@@ -32,7 +33,7 @@ public class GameEntityFactory implements EntityFactory {
     /**
      * 激光炮塔
      */
-    @Spawns("laserTower")
+    @Spawns(ET_LASER_TOWER)
     public Entity newTower(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(GameType.TOWER)
@@ -45,7 +46,7 @@ public class GameEntityFactory implements EntityFactory {
     /**
      * 雷系炮塔
      */
-    @Spawns("thunderTower")
+    @Spawns(ET_THUNDER_TOWER)
     public Entity newThunderTower(SpawnData data) {
         return buildFiveElementsTower(data, Config.THUNDER_TOWER_DATA);
     }
@@ -53,7 +54,7 @@ public class GameEntityFactory implements EntityFactory {
     /**
      * 火系炮塔
      */
-    @Spawns("flameTower")
+    @Spawns(ET_FLAME_TOWER)
     public Entity newFlameTower(SpawnData data) {
         return buildFiveElementsTower(data, Config.FLAME_TOWER_DATA);
     }
@@ -70,7 +71,7 @@ public class GameEntityFactory implements EntityFactory {
     /**
      * 箭塔
      */
-    @Spawns("arrowTower")
+    @Spawns(ET_ARROW_TOWER)
     public Entity newArrowTower(SpawnData data) {
         return entityBuilder(data)
                 .type(GameType.TOWER)
@@ -79,7 +80,10 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("point")
+    /**
+     * 点
+     */
+    @Spawns(ET_POINT)
     public Entity newPoint(SpawnData data) {
         int index = data.get("index");
         String dir = data.get("dir");
@@ -90,7 +94,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("space")
+    @Spawns(ET_SPACE)
     public Entity newSpace(SpawnData data) {
         TowerDefenseApp app = (TowerDefenseApp) (FXGL.getApp());
         app.getSpaceInfos().add(new Rectangle(data.getX(), data.getY(), data.<Integer>get("width"), data.<Integer>get("height")));
@@ -99,7 +103,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("empty")
+    @Spawns(ET_EMPTY)
     public Entity newEmpty(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(GameType.EMPTY)
@@ -107,7 +111,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("enemy")
+    @Spawns(ET_ENEMY)
     public Entity newEnemy(SpawnData data) {
         int maxHp = 500;
         HealthIntComponent hp = new HealthIntComponent(maxHp);
@@ -140,23 +144,23 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("laserTowerBullet")
+    @Spawns(ET_LASER_TOWER_BULLET)
     public Entity spawnLaserBullet(SpawnData data) {
         return createBullet(data, "tower/laser/bullet.png",30,10);
     }
 
 
-    @Spawns("flameTowerBullet")
+    @Spawns(ET_FLAME_TOWER_BULLET)
     public Entity newFlameBullet(SpawnData data) {
         return createBullet(data, "tower/flame/bullet.png",30,10);
     }
 
-    @Spawns("thunderTowerBullet")
+    @Spawns(ET_THUNDER_TOWER_BULLET)
     public Entity newThunderBullet(SpawnData data) {
         return createBullet(data, "tower/thunder/bullet.png",30,10);
     }
 
-    @Spawns("arrowTowerBullet")
+    @Spawns(ET_ARROW_TOWER_BULLET)
     public Entity newArrowBullet(SpawnData data) {
         return createBullet(data, "tower/arrow/bullet.png", 50, 10);
     }
@@ -171,7 +175,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("buildIndicator")
+    @Spawns(ET_BUILDING_INDICATOR)
     public Entity newBuildIndicator(SpawnData data) {
         return entityBuilder(data)
                 .with(new BuildIndicatorComponent())
@@ -179,7 +183,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("placedButton")
+    @Spawns(ET_PLACED_BUTTON)
     public Entity newPlacedButton(SpawnData data) {
         Texture texture = FXGL.texture((String) data.get("imgName"), data.get("width"), data.get("height"));
         texture.setTranslateX((80 - texture.getWidth()) / 2.0);
@@ -196,7 +200,7 @@ public class GameEntityFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("placeBox")
+    @Spawns(ET_PLACE_BOX)
     public Entity newPlaceBox(SpawnData data) {
         return entityBuilder(data)
                 .at(1000, 0)

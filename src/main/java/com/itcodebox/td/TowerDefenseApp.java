@@ -15,8 +15,8 @@ import com.itcodebox.td.component.EnemyComponent;
 import com.itcodebox.td.component.PlacedButtonComponent;
 import com.itcodebox.td.constant.Config;
 import com.itcodebox.td.constant.GameType;
-import com.itcodebox.td.data.TowerData;
 import com.itcodebox.td.constant.TowerType;
+import com.itcodebox.td.data.TowerData;
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.itcodebox.td.constant.Config.*;
+
 /**
  * 塔防游戏
  *
@@ -39,25 +41,57 @@ public class TowerDefenseApp extends GameApplication {
 
     //TODO  完善更多的地图和关卡
 
+    /**
+     * 刷怪点数据
+     */
     private LinkedHashMap<Integer, Pair<Point2D, String>> pointInfos = new LinkedHashMap<>();
+    /**
+     * 是否可以建造的数据
+     */
+    private ArrayList<Rectangle> spaceInfos = new ArrayList<>();
+    /**
+     * 建造指示实体
+     */
     private Entity buildIndicator;
-    private BuildIndicatorComponent buildIndicatorComponent;
+    /**
+     * 空实体
+     */
     private Entity emptyEntity;
+
+    /**
+     * 建造指示组件
+     */
+    private BuildIndicatorComponent buildIndicatorComponent;
+    /**
+     * 激光塔按钮组件
+     */
     private PlacedButtonComponent laserBtn;
+    /**
+     * 电塔按钮组件
+     */
     private PlacedButtonComponent thunderBtn;
+    /**
+     * 火塔按钮组件
+     */
     private PlacedButtonComponent flameBtn;
+    /**
+     * 箭塔按钮组件
+     */
     private PlacedButtonComponent arrowBtn;
 
     public LinkedHashMap<Integer, Pair<Point2D, String>> getPointInfos() {
         return pointInfos;
     }
 
-    ArrayList<Rectangle> spaceInfos = new ArrayList<>();
-
     public ArrayList<Rectangle> getSpaceInfos() {
         return spaceInfos;
     }
 
+    /**
+     * 初始化标题,版本,窗口大小,应用图标
+     *
+     * @param settings 游戏设置
+     */
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setTitle("Tower Defense");
@@ -68,21 +102,29 @@ public class TowerDefenseApp extends GameApplication {
         settings.setAppIcon("logo.jpg");
     }
 
+    /**
+     * 初始化游戏内变量
+     *
+     * @param vars 变量表
+     */
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("towerType", TowerType.NONE);
-
+        vars.put(VAR_TOWER_TYPE, TowerType.NONE);
     }
 
+    // 隐藏指示器
     private void hideIndicator() {
         buildIndicator.setX(-1000);
         buildIndicator.setY(-1000);
     }
 
+    /**
+     * 输入处理(鼠标)
+     */
     @Override
     protected void initInput() {
         FXGL.getInput().addEventHandler(MouseEvent.MOUSE_MOVED, e -> {
-            TowerType towerType = FXGL.geto("towerType");
+            TowerType towerType = FXGL.geto(VAR_TOWER_TYPE);
             if (towerType == TowerType.NONE) {
                 return;
             }
@@ -91,11 +133,11 @@ public class TowerDefenseApp extends GameApplication {
 
         FXGL.getInput().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                FXGL.set("towerType", TowerType.NONE);
+                FXGL.set(VAR_TOWER_TYPE, TowerType.NONE);
                 hideIndicator();
                 return;
             }
-            TowerType towerType = FXGL.geto("towerType");
+            TowerType towerType = FXGL.geto(VAR_TOWER_TYPE);
             if (towerType == TowerType.NONE) {
                 return;
             }
@@ -104,6 +146,11 @@ public class TowerDefenseApp extends GameApplication {
 
     }
 
+    /**
+     * 移动鼠标
+     *
+     * @param towerType 当前选择的塔的类型
+     */
     private void moveMouse(TowerType towerType) {
         TowerData data = getTowerData(towerType);
         if (data == null) {
@@ -146,6 +193,11 @@ public class TowerDefenseApp extends GameApplication {
         buildIndicatorComponent.canBuild(canGenerate);
     }
 
+    /**
+     * 造塔
+     *
+     * @param towerType 当前选择的塔的类型
+     */
     private void buildTower(TowerType towerType) {
         TowerData towerData = getTowerData(towerType);
         if (towerData == null) {
@@ -189,31 +241,39 @@ public class TowerDefenseApp extends GameApplication {
         if (canGenerate) {
             FXGL.play("placed.wav");
             FXGL.spawn(towerData.getName(), x, y);
-            FXGL.set("towerType", TowerType.NONE);
+            FXGL.set(VAR_TOWER_TYPE, TowerType.NONE);
             hideIndicator();
         }
 
     }
 
+    /**
+     * @param towerType 当前选择的塔的类型
+     * @return 选择塔的配置信息
+     */
     private TowerData getTowerData(TowerType towerType) {
         TowerData data;
         if (towerType == TowerType.LASER) {
-            data = Config.LASER_TOWER_DATA;
+            data = LASER_TOWER_DATA;
         } else if (towerType == TowerType.THUNDER) {
-            data = Config.THUNDER_TOWER_DATA;
+            data = THUNDER_TOWER_DATA;
         } else if (towerType == TowerType.FLAME) {
-            data = Config.FLAME_TOWER_DATA;
+            data = FLAME_TOWER_DATA;
         } else if (towerType == TowerType.ARROW) {
-            data = Config.ARROW_TOWER_DATA;
+            data = ARROW_TOWER_DATA;
         } else {
             return null;
         }
+        // 根据配置刷新
         buildIndicatorComponent.resetIndicator(data.getTowerIcon(), data.getAttackRadius());
         emptyEntity.getBoundingBoxComponent().clearHitBoxes();
         emptyEntity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(data.getWidth(), data.getHeight())));
         return data;
     }
 
+    /**
+     * 游戏初始化:资源
+     */
     @Override
     protected void initGame() {
         FXGL.getGameScene().setBackgroundColor(Color.web("#16232B"));
@@ -225,64 +285,68 @@ public class TowerDefenseApp extends GameApplication {
         FXGL.image("tower/laser/build.png");
         FXGL.image("tower/laser/attack.png");
 
+        // 设置实体建造工厂
         FXGL.getGameWorld().addEntityFactory(new GameEntityFactory());
-
+        // 设置地图
         FXGL.setLevelFromMap("level1.tmx");
-        //清理无用的实体;
+        // 按类型获取无用的实体
         List<Entity> tempEntities = FXGL.getGameWorld().getEntitiesByType(GameType.SPACE, GameType.POINT);
+        // 清理无用的实体
         FXGL.getGameWorld().removeEntities(tempEntities);
-        //建造指示器的创建
-        buildIndicator = FXGL.spawn("buildIndicator");
+        // 建造指示器的创建
+        buildIndicator = FXGL.spawn(ET_BUILDING_INDICATOR);
+        // 隐藏
         hideIndicator();
+        // 建造指示组件
         buildIndicatorComponent = buildIndicator.getComponent(BuildIndicatorComponent.class);
         //buildIndicatorComponent.resetIndicator(FXGL.image("tower/thunder/tower_icon.png"), 150);
 
-        //检测建造碰撞用的实体
-        emptyEntity = FXGL.spawn("empty");
+        // 检测建造碰撞用的实体
+        emptyEntity = FXGL.spawn(ET_EMPTY);
         emptyEntity.getBoundingBoxComponent().clearHitBoxes();
         emptyEntity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(30, 30)));
         emptyEntity.setX(-100);
         emptyEntity.setY(-100);
+
         //刷怪
         FXGL.runOnce(() -> {
             FXGL.run(() -> {
-                FXGL.spawn("enemy", pointInfos.get(0).getKey());
+                FXGL.spawn(ET_ENEMY, pointInfos.get(0).getKey());
             }, Duration.seconds(1), 20);
         }, Duration.seconds(5));
-
         FXGL.run(() -> {
             FXGL.run(() -> {
-                FXGL.spawn("enemy", pointInfos.get(0).getKey());
+                FXGL.spawn(ET_ENEMY, pointInfos.get(0).getKey());
             }, Duration.seconds(1), 20);
         }, Duration.seconds(30), 20);
 
-        FXGL.spawn("placeBox");
+        FXGL.spawn(ET_PLACE_BOX);
 
-        laserBtn = FXGL.spawn("placedButton", new SpawnData(1016, 60)
-                .put("imgName", "tower/laser/tower_icon.png")
-                .put("width", 58.0)
-                .put("height", 102.0)
-                .put("towerType", TowerType.LASER)).getComponent(PlacedButtonComponent.class);
+        laserBtn = FXGL.spawn(ET_PLACED_BUTTON, new SpawnData(1016, 60)
+                .put(VAR_IMAGE_NAME, "tower/laser/tower_icon.png")
+                .put(VAR_WIDTH, 58.0)
+                .put(VAR_HEIGHT, 102.0)
+                .put(VAR_TOWER_TYPE, TowerType.LASER)).getComponent(PlacedButtonComponent.class);
 
-        thunderBtn = FXGL.spawn("placedButton", new SpawnData(1016, 160)
-                .put("imgName", "tower/thunder/tower_icon.png")
-                .put("width", 42.0)
-                .put("height", 72.0)
-                .put("towerType", TowerType.THUNDER)).getComponent(PlacedButtonComponent.class);
+        thunderBtn = FXGL.spawn(ET_PLACED_BUTTON, new SpawnData(1016, 160)
+                .put(VAR_IMAGE_NAME, "tower/thunder/tower_icon.png")
+                .put(VAR_WIDTH, 42.0)
+                .put(VAR_HEIGHT, 72.0)
+                .put(VAR_TOWER_TYPE, TowerType.THUNDER)).getComponent(PlacedButtonComponent.class);
 
-        flameBtn = FXGL.spawn("placedButton", new SpawnData(1016, 260)
-                .put("imgName", "tower/flame/tower_icon.png")
-                .put("width", 42.0)
-                .put("height", 89.0)
-                .put("towerType", TowerType.FLAME)).getComponent(PlacedButtonComponent.class);
+        flameBtn = FXGL.spawn(ET_PLACED_BUTTON, new SpawnData(1016, 260)
+                .put(VAR_IMAGE_NAME, "tower/flame/tower_icon.png")
+                .put(VAR_WIDTH, 42.0)
+                .put(VAR_HEIGHT, 89.0)
+                .put(VAR_TOWER_TYPE, TowerType.FLAME)).getComponent(PlacedButtonComponent.class);
 
-        arrowBtn = FXGL.spawn("placedButton", new SpawnData(1016, 360)
-                .put("imgName", "tower/arrow/tower_icon.png")
-                .put("width", 43.0)
-                .put("height", 68.0)
-                .put("towerType", TowerType.ARROW)).getComponent(PlacedButtonComponent.class);
+        arrowBtn = FXGL.spawn(ET_PLACED_BUTTON, new SpawnData(1016, 360)
+                .put(VAR_IMAGE_NAME, "tower/arrow/tower_icon.png")
+                .put(VAR_WIDTH, 43.0)
+                .put(VAR_HEIGHT, 68.0)
+                .put(VAR_TOWER_TYPE, TowerType.ARROW)).getComponent(PlacedButtonComponent.class);
 
-        FXGL.getop("towerType").addListener((ob, ov, nv) -> {
+        FXGL.getop(VAR_TOWER_TYPE).addListener((ob, ov, nv) -> {
             if (TowerType.LASER == nv) {
                 selectedPlaceBtn(true, false, false, false);
             }
@@ -290,7 +354,7 @@ public class TowerDefenseApp extends GameApplication {
                 selectedPlaceBtn(false, true, false, false);
             }
             if (TowerType.FLAME == nv) {
-                selectedPlaceBtn( false, false, true, false);
+                selectedPlaceBtn(false, false, true, false);
             }
             if (TowerType.ARROW == nv) {
                 selectedPlaceBtn(false, false, false, true);
@@ -309,6 +373,9 @@ public class TowerDefenseApp extends GameApplication {
         arrowBtn.setSelected(arrow);
     }
 
+    /**
+     * 设置背景声音
+     */
     @Override
     protected void onPreInit() {
         FXGL.getSettings().setGlobalSoundVolume(0.5);
@@ -316,6 +383,9 @@ public class TowerDefenseApp extends GameApplication {
         FXGL.loopBGM("bgm.mp3");
     }
 
+    /**
+     * 初始化物理引擎
+     */
     @Override
     protected void initPhysics() {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.BULLET, GameType.ENEMY) {
@@ -333,6 +403,10 @@ public class TowerDefenseApp extends GameApplication {
         });
     }
 
+    /**
+     * 入口
+     * @param args 参数
+     */
     public static void main(String[] args) {
         launch(args);
     }

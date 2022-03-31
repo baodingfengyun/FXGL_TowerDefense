@@ -13,6 +13,8 @@ import com.itcodebox.td.constant.GameType;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
 
+import static com.itcodebox.td.constant.Config.ET_LASER_TOWER_BULLET;
+
 /**
  * [组件] 激光塔
  *
@@ -65,7 +67,7 @@ public class LaserTowerComponent extends Component {
         Point2D position = getEntity().getPosition();
         Point2D direction = enemy.getPosition().subtract(position);
 
-        Entity bullet = FXGL.spawn("laserTowerBullet", new SpawnData(getEntity().getCenter().subtract(30/2.0, 10/2.0))
+        Entity bullet = FXGL.spawn(ET_LASER_TOWER_BULLET, new SpawnData(getEntity().getCenter().subtract(30/2.0, 10/2.0))
                 .put("radius",  Config.LASER_TOWER_DATA.getAttackRadius())
                 .put("damage",  Config.LASER_TOWER_DATA.getDamage()));
         bullet.addComponent(new ProjectileComponent(direction, Config.LASER_TOWER_DATA.getBulletSpeed()));
